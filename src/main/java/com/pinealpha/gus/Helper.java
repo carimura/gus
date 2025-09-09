@@ -10,40 +10,40 @@ import java.util.concurrent.CompletableFuture;
 
 class Helper {
 
-public static void streamChat(StreamingChatModel model, String prompt, ChatMemory chatMemory) {
-    CompletableFuture<ChatResponse> futureResponse = new CompletableFuture<>();
-    
-    // Add user message to memory if memory is available
-    if (chatMemory != null) {
-        chatMemory.add(UserMessage.from(prompt));
-    }
-    
-    // Start thinking animation in a separate thread
-    Thread animationThread = new Thread(() -> {
-        String[] animation = {"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"};
-        int i = 0;
-        String RED = "\u001B[31m";
-        String RESET = "\u001B[0m";
-        while (!Thread.currentThread().isInterrupted()) {
-            IO.print("\r" + RED + animation[i % animation.length] + " Thinking..." + RESET);
-            System.out.flush();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            }
-            i++;
+    public static void streamChat(StreamingChatModel model, String prompt, ChatMemory chatMemory) {
+        CompletableFuture<ChatResponse> futureResponse = new CompletableFuture<>();
+
+        // Add user message to memory if memory is available
+        if (chatMemory != null) {
+            chatMemory.add(UserMessage.from(prompt));
         }
-        // Clear the thinking message
-        IO.print("\r                    \r");
-        System.out.flush();
-    });
-    animationThread.start();
-    
-    boolean[] firstResponse = {false};
-    StringBuilder aiResponseBuilder = new StringBuilder();
-    
+
+        // Start thinking animation in a separate thread
+        Thread animationThread = new Thread(() -> {
+            String[] animation = {"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"};
+            int i = 0;
+            String RED = "\u001B[31m";
+            String RESET = "\u001B[0m";
+            while (!Thread.currentThread().isInterrupted()) {
+                IO.print("\r" + RED + animation[i % animation.length] + " Thinking..." + RESET);
+                System.out.flush();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+                i++;
+            }
+            // Clear the thinking message
+            IO.print("\r                    \r");
+            System.out.flush();
+        });
+        animationThread.start();
+
+        boolean[] firstResponse = {false};
+        StringBuilder aiResponseBuilder = new StringBuilder();
+
         // Use conversation history if memory is available, otherwise just the current prompt
         StreamingChatResponseHandler handler = new StreamingChatResponseHandler() {
             @Override
@@ -73,16 +73,16 @@ public static void streamChat(StreamingChatModel model, String prompt, ChatMemor
                 futureResponse.completeExceptionally(error);
             }
         };
-    
+
         if (chatMemory != null) {
             model.chat(chatMemory.messages(), handler);
         } else {
             model.chat(prompt, handler);
         }
-        
+
         try {
             futureResponse.get();
-            } catch (Exception e) {
+        } catch (Exception e) {
         }
     }
 

@@ -97,9 +97,11 @@
                             <mainClass>com.pinealpha.gus.Gus</mainClass>
                             <destination>${project.build.directory}/jpackage</destination>
                             <verbose>true</verbose>
+                            <!--
                             <javaOptions>
-                                <option>--enable-preview</option>
+                                <option>-enable-preview</option>
                             </javaOptions>
+                            -->
                         </configuration>
                     </execution>
                 </executions>

@@ -1,65 +1,55 @@
 package com.pinealpha.gus;
 
-import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
-import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
-import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import java.time.Duration;
+import dev.langchain4j.data.message.SystemMessage;
 
 class Gus {
-public static void main(String[] args) {
-    String mode = "ollama"; // default mode
-    StreamingChatModel model;
-    final String MODEL;
-    
-    if (args != null && args.length > 0) {
-        if (args[0].equals("--openai")) {
-            mode = "openai";
-        } else if (args[0].equals("--ollama")) {
-            mode = "ollama";
-        }
-    }
-    
-    if (mode.equals("openai")) {
-        MODEL = "gpt-5";
 
-        String apiKey = System.getenv("OPENAI_API_KEY");
-        if (apiKey == null || apiKey.isEmpty()) {
-            IO.println("Error: OPENAI_API_KEY environment variable not set");
-            System.exit(1);
+    private static final String SYSTEM_PROMPT = "You are Gus, a friendly and helpful AI assistant. " +
+            "You provide clear, concise, and accurate responses. " +
+            "You're conversational but professional.";
+
+    public static void main(String[] args) {
+        String provider = "openai";
+        String model = "gpt-5";
+
+        if (args != null && args.length > 0) {
+            switch (args[0]) {
+                 case "--openai" -> {
+                    provider = "openai";
+                    model = "gpt-5";
+                    break;
+                }
+                case "--ollama" -> {
+                    provider = "ollama";
+                    model = "gemma3";
+                    break;
+                }
+                default -> {
+                    IO.println("Model provider not recognized: " + args[0]);
+                    IO.println("Use --openai or --ollama");
+                    System.exit(1);
+                }
+            }
         }
-        model = OpenAiStreamingChatModel.builder()
-                .apiKey(apiKey)
-                .modelName(MODEL)
-                .timeout(Duration.ofSeconds(120))
-                .build();
+
+        var stream = ModelSelector.getModel(provider, model);
+
+        ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(100);
+        chatMemory.add(SystemMessage.from(SYSTEM_PROMPT));
         
-        IO.println("[Using OpenAI mode with " + MODEL + "]");
-    } else {
-        MODEL = "gemma3";
-        final String BASE_URL = "http://localhost:11434";
-        final Duration timeout = Duration.ofSeconds(120);
-        
-        model = OllamaStreamingChatModel.builder()
-                .baseUrl(BASE_URL)
-                .modelName(MODEL)
-                .timeout(timeout)
-                .build();
-        
-        IO.println("[Using Ollama mode with " + MODEL + "]");
-    }
-    
-    ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(100);
-        IO.println("type /exit or Ctrl+D to quit, /help for help)");
         IO.println("-------------------------------------------------------------------");
-        IO.println("Hi, I'm Gus, your friendly neighborhood AI CLI!");
-        
+        IO.println("[Using provider " + provider + " with model " + model + "]\n");
+        IO.println("(type /exit or Ctrl+D to quit, /help for help)");
+        IO.println("-------------------------------------------------------------------\n");
+        IO.println("Hi, I'm Gus, your friendly neighborhood AI CLI! How can I help today? \n");
+
         while (true) {
             IO.print("> ");
-            
+
             String input = IO.readln();
-            
+
             switch (input) {
                 case null -> {
                     IO.println("\nGoodbye!");
@@ -79,7 +69,7 @@ public static void main(String[] args) {
                 case String s when s.trim().isEmpty() -> {
                 }
                 default -> {
-                    Helper.streamChat(model, input, chatMemory);
+                    Helper.streamChat(stream, input, chatMemory);
                     IO.println("\n");
                 }
             }
