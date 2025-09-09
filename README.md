@@ -4,6 +4,7 @@ Gus is a friendly neighborhood AI CLI assistant that supports both OpenAI and Ol
 
 ## TODO
 
+- Get GPT-5 to work.. confirm how to do this in langchain4j
 - Add MCP and/or tool support (search? file access?)
 - Agent mode. Have the CLI work with an agent to do something. Maybe the agent goes off and does something and comes back. The CLI would have to wait for an answer.
 - Make a CLI, using jpackage the way arc does it....
