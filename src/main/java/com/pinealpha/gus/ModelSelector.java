@@ -20,7 +20,7 @@ class ModelSelector {
             }
             model = OpenAiStreamingChatModel.builder()
                     .apiKey(apiKey)
-                    .modelName("gpt-5")
+                    .modelName(model_name)
                     .timeout(timeout)
                     //.logRequests(true) // Enable request logging
                     //.logResponses(true)   // Enable response logging
@@ -30,7 +30,7 @@ class ModelSelector {
 
             model = OllamaStreamingChatModel.builder()
                     .baseUrl(BASE_URL)
-                    .modelName("gemma3")
+                    .modelName(model_name)
                     .timeout(timeout)
                     //.logRequests(true) // Enable request logging
                     //.logResponses(true)   // Enable response logging

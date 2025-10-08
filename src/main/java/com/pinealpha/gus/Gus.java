@@ -35,7 +35,6 @@ class Gus {
         }
 
         var stream = ModelSelector.getModel(provider, model);
-
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(100);
         chatMemory.add(SystemMessage.from(SYSTEM_PROMPT));
         

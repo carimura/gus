@@ -1,22 +1,33 @@
 package com.pinealpha.gus;
 
+import java.util.List;
+
 import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.data.message.ToolExecutionResultMessage;
+
 import java.util.concurrent.CompletableFuture;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.agent.tool.ToolSpecifications;
+import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.chat.response.CompleteToolCall;
+import dev.langchain4j.model.chat.response.PartialToolCall;
 
 class Helper {
 
     public static void streamChat(StreamingChatModel model, String prompt, ChatMemory chatMemory) {
         CompletableFuture<ChatResponse> futureResponse = new CompletableFuture<>();
+        List<ToolSpecification> toolSpecs = ToolSpecifications.toolSpecificationsFrom(Tools.class);
 
-        // Add user message to memory if memory is available
-        if (chatMemory != null) {
-            chatMemory.add(UserMessage.from(prompt));
-        }
+        chatMemory.add(UserMessage.from(prompt));
 
         // Start thinking animation in a separate thread
         Thread animationThread = new Thread(() -> {
@@ -59,11 +70,45 @@ class Helper {
 
             @Override
             public void onCompleteResponse(ChatResponse completeResponse) {
-                // Add AI response to memory if memory is available
-                if (chatMemory != null) {
-                    chatMemory.add(AiMessage.from(aiResponseBuilder.toString()));
+                List<ToolExecutionRequest> toolRequests = completeResponse.aiMessage().toolExecutionRequests();
+
+                if (toolRequests != null && !toolRequests.isEmpty()) {
+                    chatMemory.add(completeResponse.aiMessage());
+
+                    for (ToolExecutionRequest request : toolRequests) {
+                        String result = executeTool(request);
+                        chatMemory.add(ToolExecutionResultMessage.from(request.id(), request.name(), result));
+                    }
+
+                    ChatRequest continueRequest = ChatRequest.builder()
+                        .messages(chatMemory.messages())
+                        .toolSpecifications(toolSpecs)
+                        .build();
+
+                    aiResponseBuilder.setLength(0);
+                    model.chat(continueRequest, this);
+                } else {
+                    // Final response - done
+                    if (aiResponseBuilder.length() > 0) {
+                        chatMemory.add(AiMessage.from(aiResponseBuilder.toString()));
+                    }
+                    futureResponse.complete(completeResponse);
                 }
-                futureResponse.complete(completeResponse);
+            }
+
+            @Override
+            public void onPartialToolCall(PartialToolCall partialToolCall) {
+                if (!firstResponse[0]) {
+                    stopAnimation(animationThread);
+                    firstResponse[0] = true;
+                }
+                aiResponseBuilder.append(partialToolCall);
+                System.out.flush();
+            }
+
+            @Override
+            public void onCompleteToolCall(CompleteToolCall completeToolCall) {
+                // Tool calls are handled in onCompleteResponse
             }
 
             @Override
@@ -74,15 +119,34 @@ class Helper {
             }
         };
 
-        if (chatMemory != null) {
-            model.chat(chatMemory.messages(), handler);
-        } else {
-            model.chat(prompt, handler);
-        }
+        ChatRequest chatRequest = ChatRequest.builder()
+                .messages(chatMemory.messages())
+                .toolSpecifications(toolSpecs)
+                .build();
+        model.chat(chatRequest, handler);
 
         try {
             futureResponse.get();
         } catch (Exception e) {
+            IO.println(e);
+        }
+    }
+
+    private static String executeTool(ToolExecutionRequest request) {
+        Tools tools = new Tools();
+        Gson gson = new Gson();
+        JsonObject args = gson.fromJson(request.arguments(), JsonObject.class);
+
+        try {
+            return switch (request.name()) {
+                case "stringLength" -> String.valueOf(tools.stringLength(args.get("arg0").getAsString()));
+                case "add" -> String.valueOf(tools.add(args.get("arg0").getAsInt(), args.get("arg1").getAsInt()));
+                case "sqrt" -> String.valueOf(tools.sqrt(args.get("arg0").getAsInt()));
+                case "code" -> String.valueOf(tools.code());
+                default -> "Unknown tool: " + request.name();
+            };
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
         }
     }
 
