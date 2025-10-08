@@ -68,7 +68,7 @@ class Gus {
                 case String s when s.trim().isEmpty() -> {
                 }
                 default -> {
-                    Helper.streamChat(stream, input, chatMemory);
+                    ChatService.streamChat(stream, input, chatMemory);
                     IO.println("\n");
                 }
             }
