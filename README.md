@@ -4,9 +4,9 @@ Gus is a friendly neighborhood AI CLI assistant that supports both OpenAI and Ol
 
 ## TODO
 
-- Add MCP and/or tool support (search? file access?)
 - Agent mode. Have the CLI work with an agent to do something. Maybe the agent goes off and does something and comes back. The CLI would have to wait for an answer.
-- Make a CLI, using jpackage the way arc does it....
+- Turn the tool call switch into a sealed class so that we have the complete list of tools
+- New interesting tools... how about search?
 
 ## Prerequisites
 

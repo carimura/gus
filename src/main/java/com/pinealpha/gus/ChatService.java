@@ -138,6 +138,7 @@ class ChatService {
         JsonObject args = gson.fromJson(request.arguments(), JsonObject.class);
 
         try {
+            // TODO: Turn this into a sealed class so that we have the complete list of tools
             return switch (request.name()) {
                 case "stringLength" -> String.valueOf(tools.stringLength(args.get("arg0").getAsString()));
                 case "add" -> String.valueOf(tools.add(args.get("arg0").getAsInt(), args.get("arg1").getAsInt()));
