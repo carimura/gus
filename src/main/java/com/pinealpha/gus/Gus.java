@@ -23,7 +23,7 @@ class Gus {
                 }
                 case "--ollama" -> {
                     provider = "ollama";
-                    model = "gemma3";
+                    model = "llama3.2";
                     break;
                 }
                 default -> {

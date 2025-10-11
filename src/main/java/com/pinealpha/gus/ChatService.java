@@ -1,5 +1,6 @@
 package com.pinealpha.gus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
@@ -21,15 +22,19 @@ import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.CompleteToolCall;
 import dev.langchain4j.model.chat.response.PartialToolCall;
 
+import com.pinealpha.gus.tools.*;
+
 class ChatService {
 
     public static void streamChat(StreamingChatModel model, String prompt, ChatMemory chatMemory) {
         CompletableFuture<ChatResponse> futureResponse = new CompletableFuture<>();
-        List<ToolSpecification> toolSpecs = ToolSpecifications.toolSpecificationsFrom(Tools.class);
+        List<ToolSpecification> toolSpecs = new ArrayList<>();
+        for (Class<?> toolClass : Tools.class.getPermittedSubclasses()) {
+            toolSpecs.addAll(ToolSpecifications.toolSpecificationsFrom(toolClass));
+        }
 
         chatMemory.add(UserMessage.from(prompt));
 
-        // Start thinking animation in a separate thread
         Thread animationThread = new Thread(() -> {
             String[] animation = {"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"};
             int i = 0;
@@ -133,20 +138,17 @@ class ChatService {
     }
 
     private static String executeTool(ToolExecutionRequest request) {
-        Tools tools = new Tools();
         Gson gson = new Gson();
         JsonObject args = gson.fromJson(request.arguments(), JsonObject.class);
 
         try {
-            // TODO: Turn this into a sealed class so that we have the complete list of tools
-            return switch (request.name()) {
-                case "stringLength" -> String.valueOf(tools.stringLength(args.get("arg0").getAsString()));
-                case "add" -> String.valueOf(tools.add(args.get("arg0").getAsInt(), args.get("arg1").getAsInt()));
-                case "sqrt" -> String.valueOf(tools.sqrt(args.get("arg0").getAsInt()));
-                case "code" -> String.valueOf(tools.code());
-                case "searchWeb" -> String.valueOf(tools.searchWeb(args.get("arg0").getAsString()));
-                case "scrapePage" -> String.valueOf(tools.scrapePage(args.get("arg0").getAsString()));
-                default -> "Unknown tool: " + request.name();
+            Tools tool = Tools.getToolByName(request.name());
+
+            return switch (tool) {
+                case StringLengthTool t -> String.valueOf(t.stringLength(args.get("arg0").getAsString()));
+                case CodeTool t -> t.code();
+                case SearchWebTool t -> t.searchWeb(args.get("arg0").getAsString());
+                case ScrapePageTool t -> t.scrapePage(args.get("arg0").getAsString());
             };
         } catch (Exception e) {
             return "Error: " + e.getMessage();
