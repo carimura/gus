@@ -39,8 +39,18 @@ class Gus {
         chatMemory.add(SystemMessage.from(SYSTEM_PROMPT));
         
         IO.println("-------------------------------------------------------------------");
+        IO.println("            ,");
+        IO.println("            |`-.__");
+        IO.println("            / ' _/");
+        IO.println("           ----` ");
+        IO.println("          /    }");
+        IO.println("         /  \\ /");
+        IO.println("     \\ /`   \\\\\\");
+        IO.println("      `\\    /_\\\\");
+        IO.println("       `~~~~~``~`");
+        IO.println("");
         IO.println("[Using provider " + provider + " with model " + model + "]\n");
-        IO.println("(type /exit or Ctrl+D to quit, /help for help)");
+        IO.println("(type /exit or Ctrl+D to quit, /help for help, /clear to clear memory)");
         IO.println("-------------------------------------------------------------------\n");
         IO.println("Hi, I'm Gus, your friendly neighborhood AI CLI! How can I help today? \n");
 

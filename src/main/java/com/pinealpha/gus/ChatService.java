@@ -144,6 +144,8 @@ class ChatService {
                 case "add" -> String.valueOf(tools.add(args.get("arg0").getAsInt(), args.get("arg1").getAsInt()));
                 case "sqrt" -> String.valueOf(tools.sqrt(args.get("arg0").getAsInt()));
                 case "code" -> String.valueOf(tools.code());
+                case "searchWeb" -> String.valueOf(tools.searchWeb(args.get("arg0").getAsString()));
+                case "scrapePage" -> String.valueOf(tools.scrapePage(args.get("arg0").getAsString()));
                 default -> "Unknown tool: " + request.name();
             };
         } catch (Exception e) {

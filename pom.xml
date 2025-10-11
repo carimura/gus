@@ -34,6 +34,11 @@
             <version>${langchain.version}</version>
         </dependency>
         <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-web-search-engine-tavily</artifactId>
+            <version>1.4.0-beta10</version>
+        </dependency>
+        <dependency>
             <groupId>org.panteleyev</groupId>
             <artifactId>jpackage-maven-plugin</artifactId>
             <version>1.6.6</version>
@@ -102,11 +107,43 @@
                             <mainClass>com.pinealpha.gus.Gus</mainClass>
                             <destination>${project.build.directory}/jpackage</destination>
                             <verbose>true</verbose>
+                            <macSign>true</macSign>
+                            <macSigningKeyUserName>Developer ID Application: Chad Arimura (Y6H3T7M96S)</macSigningKeyUserName>
+                            <macEntitlements>/Users/CARIMURA/workspace/certs/entitlements.plist</macEntitlements>
                             <!--
                             <javaOptions>
                                 <option>-enable-preview</option>
                             </javaOptions>
                             -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>resign-with-entitlements</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>codesign</executable>
+                            <arguments>
+                                <argument>--force</argument>
+                                <argument>--sign</argument>
+                                <argument>Developer ID Application: Chad Arimura (Y6H3T7M96S)</argument>
+                                <argument>--entitlements</argument>
+                                <argument>/Users/CARIMURA/workspace/certs/entitlements.plist</argument>
+                                <argument>--options</argument>
+                                <argument>runtime</argument>
+                                <argument>--deep</argument>
+                                <argument>${project.build.directory}/jpackage/gus.app</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>
