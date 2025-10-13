@@ -10,7 +10,7 @@ class Gus {
             "You provide clear, concise, and accurate responses. " +
             "You're conversational but professional.";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String provider = "openai";
         String model = "gpt-5";
 
@@ -37,7 +37,7 @@ class Gus {
         var stream = ModelSelector.getModel(provider, model);
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(100);
         chatMemory.add(SystemMessage.from(SYSTEM_PROMPT));
-        
+
         IO.println("-------------------------------------------------------------------");
         IO.println("            ,");
         IO.println("            |`-.__");
@@ -54,18 +54,15 @@ class Gus {
         IO.println("-------------------------------------------------------------------\n");
         IO.println("Hi, I'm Gus, your friendly neighborhood AI CLI! How can I help today? \n");
 
-        while (true) {
-            IO.print("> ");
+        InputHandler inputHandler = new InputHandler();
 
-            String input = IO.readln();
+        while (true) {
+            String input = inputHandler.readLine("> ");
 
             switch (input) {
-                case null -> {
-                    IO.println("\nGoodbye!");
-                    return;
-                }
                 case "/exit" -> {
                     IO.println("Goodbye!");
+                    inputHandler.close();
                     return;
                 }
                 case "/clear" -> {
