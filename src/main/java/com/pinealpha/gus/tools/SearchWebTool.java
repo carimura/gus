@@ -8,7 +8,7 @@ import dev.langchain4j.web.search.tavily.TavilyWebSearchEngine;
 public final class SearchWebTool extends Tools {
     @Tool("Searches the web for current information and returns relevant results")
     public String searchWeb(String query) {
-        IO.println("[Calling tool searchWeb() with query='" + query + "']");
+        preToolHook("searchWeb", "query='" + query + "'");
 
         String apiKey = System.getenv("TAVILY_API_KEY");
         if (apiKey == null || apiKey.isEmpty()) {

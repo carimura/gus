@@ -12,7 +12,7 @@ import java.net.http.HttpResponse;
 public final class ScrapePageTool extends Tools {
     @Tool("Extracts and returns the full content from a web page URL")
     public String scrapePage(String url) {
-        IO.println("[Calling tool scrapePage() with url='" + url + "']");
+        preToolHook("scrapePage", "url='" + url + "'");
 
         String apiKey = System.getenv("TAVILY_API_KEY");
         if (apiKey == null || apiKey.isEmpty()) {

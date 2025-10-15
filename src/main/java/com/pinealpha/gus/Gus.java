@@ -59,6 +59,14 @@ class Gus {
         while (true) {
             String input = inputHandler.readLine("> ");
 
+            if (input == null) {
+                input = "/exit";
+            }
+
+            if (!input.trim().isEmpty()) {
+                IO.print("\u001B[1A\r\u001B[K\u001B[48;5;240m\u001B[37m> " + input + "\u001B[0m\n\n");
+            }
+
             switch (input) {
                 case "/exit" -> {
                     IO.println("Goodbye!");

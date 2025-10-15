@@ -85,12 +85,14 @@ class ChatService {
                         chatMemory.add(ToolExecutionResultMessage.from(request.id(), request.name(), result));
                     }
 
+                    // Reset for continuation - animation won't restart since firstResponse is true
                     ChatRequest continueRequest = ChatRequest.builder()
                         .messages(chatMemory.messages())
                         .toolSpecifications(toolSpecs)
                         .build();
 
                     aiResponseBuilder.setLength(0);
+                    firstResponse[0] = false;  // Reset so animation doesn't restart
                     model.chat(continueRequest, this);
                 } else {
                     // Final response - done
@@ -103,10 +105,7 @@ class ChatService {
 
             @Override
             public void onPartialToolCall(PartialToolCall partialToolCall) {
-                if (!firstResponse[0]) {
-                    Helper.stopAnimation(animationThread);
-                    firstResponse[0] = true;
-                }
+                // Keep animation running during tool calls
                 aiResponseBuilder.append(partialToolCall);
                 System.out.flush();
             }
