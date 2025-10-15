@@ -57,12 +57,9 @@ class Gus {
         InputHandler inputHandler = new InputHandler();
 
         while (true) {
-            String input = inputHandler.readLine("> ");
+            var input = inputHandler.readLine("> ");
 
-            if (input == null) {
-                input = "/exit";
-            }
-
+            // applies background shade on typed commands
             if (!input.trim().isEmpty()) {
                 IO.print("\u001B[1A\r\u001B[K\u001B[48;5;240m\u001B[37m> " + input + "\u001B[0m\n\n");
             }
