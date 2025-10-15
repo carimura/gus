@@ -1,6 +1,9 @@
-# Gus - AI CLI Assistant
+# Gus - Terminal Agent in Java
 
-Gus is a friendly neighborhood AI CLI assistant that supports both OpenAI and Ollama models.
+Gus is a terminal agent CLI written in Java that supports both OpenAI and Ollama models. Think of Gus as v0.01-alpha of Claude Code.
+
+Gus is also my great pyrenees dog. He's friendly and needs a bath. Like this repo.
+
 
 ## TODO
 
