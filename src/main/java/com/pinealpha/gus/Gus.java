@@ -6,9 +6,11 @@ import dev.langchain4j.data.message.SystemMessage;
 
 class Gus {
 
-    private static final String SYSTEM_PROMPT = "You are Gus, a friendly and helpful AI assistant. " +
-            "You provide clear, concise, and accurate responses. " +
-            "You're conversational but professional.";
+    private static final String SYSTEM_PROMPT = """
+        You are Gus, a friendly and helpful AI assistant.
+        You provide clear, concise, and accurate responses.
+        You're conversational but professional.
+    """;
 
     public static void main(String[] args) throws Exception {
         String provider = "openai";
@@ -38,21 +40,25 @@ class Gus {
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(100);
         chatMemory.add(SystemMessage.from(SYSTEM_PROMPT));
 
-        IO.println("-------------------------------------------------------------------");
-        IO.println("            ,");
-        IO.println("            |`-.__");
-        IO.println("            / ' _/");
-        IO.println("           ----` ");
-        IO.println("          /    }");
-        IO.println("         /  \\ /");
-        IO.println("     \\ /`   \\\\\\");
-        IO.println("      `\\    /_\\\\");
-        IO.println("       `~~~~~``~`");
-        IO.println("");
-        IO.println("[Using provider " + provider + " with model " + model + "]\n");
-        IO.println("(type /exit or Ctrl+D to quit, /help for help, /clear to clear memory)");
-        IO.println("-------------------------------------------------------------------\n");
-        IO.println("Hi, I'm Gus, your friendly neighborhood AI CLI! How can I help today? \n");
+        IO.println("""
+            -------------------------------------------------------------------
+                        ,
+                        |`-.__
+                        / ' _/
+                       ----`\s
+                      /    }
+                     /  \\ /
+                 \\ /`   \\\\\\
+                  `\\    /_\\\\
+                   `~~~~~``~`
+
+            [Using provider %s with model %s]
+
+            (type /exit or Ctrl+D to quit, /help for help, /clear to clear memory)
+            -------------------------------------------------------------------
+
+            Hi, I'm Gus, your friendly neighborhood AI CLI! How can I help today?\s
+            """.formatted(provider, model));
 
         InputHandler inputHandler = new InputHandler();
 

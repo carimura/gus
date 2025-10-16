@@ -9,6 +9,16 @@ Gus is also my great pyrenees dog. He's friendly and needs a bath. Like this rep
 
 - Read file tool
 - Javadoc tool or Javadoc MCP
+- getToolByName is a error-prong String, need to make strongly typed maybe with enum
+
+
+## Modern Features
+- Records
+- Patterns
+- Sealed classes (Tools)
+- exhaustive switch (ChatService)
+- text blocks
+
 
 
 ## Prerequisites
