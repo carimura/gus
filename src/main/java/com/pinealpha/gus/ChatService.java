@@ -51,7 +51,6 @@ class ChatService {
                 }
                 i++;
             }
-            // Clear the thinking message
             IO.print("\r                    \r");
             System.out.flush();
         });
@@ -60,7 +59,6 @@ class ChatService {
         boolean[] firstResponse = {false};
         StringBuilder aiResponseBuilder = new StringBuilder();
 
-        // Use conversation history if memory is available, otherwise just the current prompt
         StreamingChatResponseHandler handler = new StreamingChatResponseHandler() {
             @Override
             public void onPartialResponse(String partialResponse) {
@@ -144,7 +142,6 @@ class ChatService {
             Tools tool = Tools.getToolByName(request.name());
 
             return switch (tool) {
-                case StringLengthTool t -> String.valueOf(t.stringLength(args.get("arg0").getAsString()));
                 case SecretTool t -> t.secret();
                 case SearchWebTool t -> t.searchWeb(args.get("arg0").getAsString());
                 case ScrapePageTool t -> t.scrapePage(args.get("arg0").getAsString());

@@ -17,7 +17,7 @@ Gus is also my great pyrenees dog. He's friendly and needs a bath. Like this rep
 - Patterns
 - Sealed classes (Tools)
 - exhaustive switch (ChatService)
-- text blocks
+- text blocks (Gus.java)
 
 
 

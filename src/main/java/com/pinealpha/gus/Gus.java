@@ -13,8 +13,8 @@ class Gus {
     """;
 
     public static void main(String[] args) throws Exception {
-        String provider = "openai";
-        String model = "gpt-5";
+        var provider = "openai";
+        var model = "gpt-5";
 
         if (args != null && args.length > 0) {
             switch (args[0]) {
@@ -60,7 +60,7 @@ class Gus {
             Hi, I'm Gus, your friendly neighborhood AI CLI! How can I help today?\s
             """.formatted(provider, model));
 
-        InputHandler inputHandler = new InputHandler();
+        var inputHandler = new InputHandler();
 
         while (true) {
             var input = inputHandler.readLine("> ");

@@ -1,13 +1,11 @@
 package com.pinealpha.gus.tools;
 
-public abstract sealed class Tools permits StringLengthTool,
-                                           SecretTool,
+public abstract sealed class Tools permits SecretTool,
                                            SearchWebTool,
                                            ScrapePageTool {
 
     public static Tools getToolByName(String name) {
         return switch (name) {
-            case "stringLength" -> new StringLengthTool();
             case "secret" -> new SecretTool();
             case "searchWeb" -> new SearchWebTool();
             case "scrapePage" -> new ScrapePageTool();
@@ -20,7 +18,6 @@ public abstract sealed class Tools permits StringLengthTool,
         String BOLD = "\u001B[1m";
         String RESET = "\u001B[0m";
 
-        // Clear the animation line before printing tool output
         IO.print("\r                    \r");
 
         String formattedToolName = GREEN + "● " + RESET + BOLD + toolName + RESET;
