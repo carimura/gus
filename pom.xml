@@ -113,7 +113,7 @@
                             <destination>${project.build.directory}/jpackage</destination>
                             <verbose>true</verbose>
                             <macSign>true</macSign>
-                            <macSigningKeyUserName>Developer ID Application: Chad Arimura (Y6H3T7M96S)</macSigningKeyUserName>
+                            <macSigningKeyUserName>${env.MAC_SIGNING_KEY_NAME}</macSigningKeyUserName>
                             <macEntitlements>/Users/CARIMURA/workspace/certs/entitlements.plist</macEntitlements>
                             <javaOptions>
                                 <option>--enable-native-access=ALL-UNNAMED</option>
@@ -139,7 +139,7 @@
                             <arguments>
                                 <argument>--force</argument>
                                 <argument>--sign</argument>
-                                <argument>Developer ID Application: Chad Arimura (Y6H3T7M96S)</argument>
+                                <argument>${env.MAC_SIGNING_KEY_NAME}</argument>
                                 <argument>--entitlements</argument>
                                 <argument>/Users/CARIMURA/workspace/certs/entitlements.plist</argument>
                                 <argument>--options</argument>
