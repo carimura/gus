@@ -112,9 +112,6 @@
                             <mainClass>com.pinealpha.gus.Gus</mainClass>
                             <destination>${project.build.directory}/jpackage</destination>
                             <verbose>true</verbose>
-                            <macSign>true</macSign>
-                            <macSigningKeyUserName>${env.MAC_SIGNING_KEY_NAME}</macSigningKeyUserName>
-                            <macEntitlements>${env.MAC_ENTITLEMENTS}</macEntitlements>
                             <javaOptions>
                                 <option>--enable-native-access=ALL-UNNAMED</option>
                             </javaOptions>
@@ -123,35 +120,7 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>resign-with-entitlements</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>codesign</executable>
-                            <arguments>
-                                <argument>--force</argument>
-                                <argument>--sign</argument>
-                                <argument>${env.MAC_SIGNING_KEY_NAME}</argument>
-                                <argument>--entitlements</argument>
-                                <argument>${env.MAC_ENTITLEMENTS}</argument>
-                                <argument>--options</argument>
-                                <argument>runtime</argument>
-                                <argument>--deep</argument>
-                                <argument>${project.build.directory}/jpackage/gus.app</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
+
 </project>
