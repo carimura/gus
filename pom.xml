@@ -114,7 +114,7 @@
                             <verbose>true</verbose>
                             <macSign>true</macSign>
                             <macSigningKeyUserName>${env.MAC_SIGNING_KEY_NAME}</macSigningKeyUserName>
-                            <macEntitlements>/Users/CARIMURA/workspace/certs/entitlements.plist</macEntitlements>
+                            <macEntitlements>${env.MAC_ENTITLEMENTS}</macEntitlements>
                             <javaOptions>
                                 <option>--enable-native-access=ALL-UNNAMED</option>
                             </javaOptions>
@@ -141,7 +141,7 @@
                                 <argument>--sign</argument>
                                 <argument>${env.MAC_SIGNING_KEY_NAME}</argument>
                                 <argument>--entitlements</argument>
-                                <argument>/Users/CARIMURA/workspace/certs/entitlements.plist</argument>
+                                <argument>${env.MAC_ENTITLEMENTS}</argument>
                                 <argument>--options</argument>
                                 <argument>runtime</argument>
                                 <argument>--deep</argument>
