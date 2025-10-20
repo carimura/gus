@@ -33,7 +33,7 @@ Gus is also my great pyrenees dog. He's friendly and needs a bath. Like this rep
 Build the project with all dependencies:
 
 ```bash
-mvn -Pcomplete clean package
+mvn clean package
 ```
 
 ## Run
