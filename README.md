@@ -11,7 +11,7 @@ I wrote about building it [here](https://chad.cm/posts/2025-10-17-building-gus).
 
 - Read file tool
 - Javadoc tool or Javadoc MCP
-- getToolByName is a error-prong String, need to make strongly typed maybe with enum
+- getToolByName is an error-prone String
 
 
 ## Modern Features
