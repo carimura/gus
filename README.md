@@ -30,7 +30,9 @@ Gus is also my great pyrenees dog. He's friendly and needs a bath. Like this rep
 
 ## Build
 
-Build the project with all dependencies:
+Build the project with all dependencies.
+
+NOTE: To run on your machine, you'll need to modify the maven configuration to either a) *not* sign the app, or b) use your cert (on a mac).
 
 ```bash
 mvn clean package
