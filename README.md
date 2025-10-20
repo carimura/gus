@@ -4,6 +4,8 @@ Gus is a terminal agent CLI written in Java that supports both OpenAI and Ollama
 
 Gus is also my great pyrenees dog. He's friendly and needs a bath. Like this repo.
 
+I wrote about building it [here](https://chad.cm/posts/2025-10-17-building-gus).
+
 
 ## TODO
 
