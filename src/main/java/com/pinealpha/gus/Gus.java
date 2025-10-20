@@ -12,7 +12,7 @@ class Gus {
         You're conversational but professional.
     """;
 
-    public static void main(String[] args) throws Exception {
+    void main(String[] args) throws Exception {
         var provider = "openai";
         var model = "gpt-5";
 
